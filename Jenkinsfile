@@ -28,11 +28,13 @@ pipeline {
 			}
 		}
 
+    // This 'Deploy' stage is for demonstration purpose only. In real world, you should deploy to cloud environment or a similar platform.
 		stage('Deploy') {
 			steps {
-				// Stop and remove the previous container if it exists
 				sh 'ls -ltr'
 				sh "docker build -t spring-boot-demo:v${env.MY_BUILD_NUMBER} ."
+
+				// Stop and remove the previous container if it exists
 				sh 'docker rm -f spring-boot-demo || true'
 				sh "docker run -d -p 80:8080 --name spring-boot-demo spring-boot-demo:v${env.MY_BUILD_NUMBER}"
 			}
