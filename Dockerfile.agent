@@ -1,0 +1,7 @@
+# Use maven:3.9.6-eclipse-temurin-17-alpine as base image
+FROM maven:3.9.6-eclipse-temurin-17-alpine
+
+# Update the system, install Docker, and clean up
+RUN apk update && \
+	apk add docker && \
+	rm -rf /var/cache/apk/*

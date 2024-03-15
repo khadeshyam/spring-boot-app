@@ -1,51 +1,44 @@
 pipeline {
-    
-    agent {
-        docker {
-            image 'maven:3.9.0'
-            args '--user root -v /var/run/docker.sock:/var/run/docker.sock' // mount Docker socket to access the host's Docker daemon
-        }
-    }
+	agent {
+		docker {
+			image 'shyam2056/maven-jenkins-agent:latest'
+			args '--user root -v /var/run/docker.sock:/var/run/docker.sock' // mount Docker socket to access the host's Docker daemon
+		}
+	}
+	environment {
+		MY_BUILD_NUMBER = "${env.BUILD_NUMBER}"
+	}
+	stages {
+		stage('Checkout') {
+			steps {
+				 sh 'echo passed'
+			}
+		}
+        
+		stage('Build') {
+			steps {
+				sh 'ls -ltr'
+				sh 'mvn clean package'
+			}
+		}
 
-    stages {
-        stage('Checkout') {
-            steps {
-                 sh 'echo passed'
-            }
-        }
+		stage('Test') {
+			steps {
+				sh 'mvn test'
+			}
+		}
 
-        stage('Install Docker') {
-            steps {
-                sh 'apt-get update && apt-get install -y docker.io'
-            }
-        }
+		stage('Docker Build') {
+			steps {
+				sh 'ls -ltr'
+				sh "docker build -t spring-boot-demo:v${env.MY_BUILD_NUMBER} ."
+			}
+		}
 
-
-        stage('Build') {
-            steps {
-                sh 'ls -ltr'
-                sh 'mvn clean package'
-            }
-        }
-
-        stage('Test') {
-            steps {
-
-                sh 'mvn test'
-            }
-        }
-
-        stage('Docker Build') {
-            steps {
-                sh 'ls -ltr'
-                sh 'docker build -t spring-boot-demo:latest .'
-            }
-        }
-
-        stage('Docker Run') {
-            steps {
-                sh 'docker run -d -p 80:8080 spring-boot-demo:latest'
-            }
-        }
-    }
+		stage('Docker Run') {
+			steps {
+				sh "docker run -d -p 80:8080 spring-boot-demo:v${env.MY_BUILD_NUMBER}"
+			}
+		}
+	}
 }
