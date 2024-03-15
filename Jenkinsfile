@@ -3,7 +3,6 @@ pipeline {
     agent {
         docker {
             image 'maven:3.9.0'
-            command 'bash -c "apt-get update && apt-get install -y docker.io && exec \"$@\""'
             args '--user root -v /var/run/docker.sock:/var/run/docker.sock' // mount Docker socket to access the host's Docker daemon
         }
     }
@@ -14,6 +13,13 @@ pipeline {
                  sh 'echo passed'
             }
         }
+
+        stage('Install Docker') {
+            steps {
+                sh 'apt-get update && apt-get install -y docker.io'
+            }
+        }
+
 
         stage('Build') {
             steps {
