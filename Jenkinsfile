@@ -28,16 +28,11 @@ pipeline {
 			}
 		}
 
-		stage('Docker Build') {
-			steps {
-				sh 'ls -ltr'
-				sh "docker build -t spring-boot-demo:v${env.MY_BUILD_NUMBER} ."
-			}
-		}
-
-		stage('Docker Run') {
+		stage('Deploy') {
 			steps {
 				// Stop and remove the previous container if it exists
+				sh 'ls -ltr'
+				sh "docker build -t spring-boot-demo:v${env.MY_BUILD_NUMBER} ."
 				sh 'docker rm -f spring-boot-demo || true'
 				sh "docker run -d -p 80:8080 --name spring-boot-demo spring-boot-demo:v${env.MY_BUILD_NUMBER}"
 			}
