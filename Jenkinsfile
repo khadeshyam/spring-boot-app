@@ -44,7 +44,7 @@ pipeline {
 
         stage('Docker Run') {
             steps {
-                sh 'docker run -d -p 8080:8080 spring-boot-demo:latest'
+                sh 'docker run -d -p 80:8080 spring-boot-demo:latest'
             }
         }
     }
