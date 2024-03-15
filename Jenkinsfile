@@ -11,24 +11,27 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                checkout scm
+                 sh 'echo passed'
             }
         }
 
         stage('Build') {
             steps {
+                sh 'ls -ltr'
                 sh 'mvn clean package'
             }
         }
 
         stage('Test') {
             steps {
+
                 sh 'mvn test'
             }
         }
 
         stage('Docker Build') {
             steps {
+                sh 'ls -ltr'
                 sh 'docker build -t spring-boot-demo:latest .'
             }
         }
