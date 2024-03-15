@@ -11,10 +11,10 @@ pipeline {
 	stages {
 		stage('Checkout') {
 			steps {
-				 sh 'echo passed'
+				sh 'echo passed'
 			}
 		}
-        
+		
 		stage('Build') {
 			steps {
 				sh 'ls -ltr'
@@ -37,7 +37,9 @@ pipeline {
 
 		stage('Docker Run') {
 			steps {
-				sh "docker run -d -p 80:8080 spring-boot-demo:v${env.MY_BUILD_NUMBER}"
+				// Stop and remove the previous container if it exists
+				sh 'docker rm -f spring-boot-demo || true'
+				sh "docker run -d -p 80:8080 --name spring-boot-demo spring-boot-demo:v${env.MY_BUILD_NUMBER}"
 			}
 		}
 	}
