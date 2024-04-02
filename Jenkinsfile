@@ -9,13 +9,13 @@ pipeline {
 		MY_BUILD_NUMBER = "${env.BUILD_NUMBER}"
 	}
 	stages {
-		// stage('Checkout') {
-		// 	steps {
-		// 		sh 'echo passed'
-		// 	}
-		// }
+		stage('Checkout') {
+			steps {
+				sh 'echo passed'
+			}
+		}
 		
-		stage('Build') {
+		stage('Build and Test') {
 			steps {
 				sh 'ls -ltr'
 				sh 'mvn clean package'
